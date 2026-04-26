@@ -6,6 +6,13 @@
 
 基于《嫌疑人X的献身》的交互式推理小说阅读器，包含 9 个章节、60 张电影感插画、线索收集与章节解锁系统。
 
+## 在线体验
+
+- GitHub Pages: https://ballcard.github.io/suspect-x-reader/
+- 国内友好版: https://y7gcnzqkrh.coze.site/
+
+> 如果在微信内置浏览器中加载较慢，建议复制链接到系统浏览器打开。
+
 ![首页](docs/home.png)
 
 ## 特性
@@ -75,6 +82,13 @@ src/
 **English** | [中文](#)
 
 An immersive interactive reading experience based on Keigo Higashino's novel *The Devotion of Suspect X*. Features progressive paragraph reveal, clue collection, chapter unlocking, and 60 cinematic illustrations.
+
+## Live Demo
+
+- GitHub Pages: https://ballcard.github.io/suspect-x-reader/
+- China-friendly mirror: https://y7gcnzqkrh.coze.site/
+
+If the in-app browser loads slowly, copy the link and open it in a regular browser.
 
 ![Home](docs/home.png)
 
