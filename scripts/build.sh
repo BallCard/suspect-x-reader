@@ -6,7 +6,7 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_DIR"
 
 echo "Installing dependencies..."
-pnpm install --prefer-frozen-lockfile --prefer-offline --loglevel debug --reporter=append-only
+pnpm install
 
 echo "Installing serve for static serving..."
 pnpm add -D serve
