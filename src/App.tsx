@@ -1,15 +1,21 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { useState, useCallback, useRef } from 'react';
-import { Menu, X, BookOpen, Search, RotateCcw } from 'lucide-react';
+import { Menu, X, BookOpen, Search, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { chapters, clues } from './data/chapters';
 import { useProgress } from './hooks/useProgress';
+import { useAudio } from './hooks/useAudio';
 import { ReadingView } from './components/ReadingView';
 import { CluePanel } from './components/CluePanel';
 import { ChapterSelector } from './components/ChapterSelector';
 
 type Page = 'home' | 'chapters' | 'reading';
 
-const Navbar = ({ onNavigate, currentPage }: { onNavigate: (page: Page) => void; currentPage: Page }) => {
+const Navbar = ({ onNavigate, currentPage, soundEnabled, onToggleSound }: { 
+  onNavigate: (page: Page) => void; 
+  currentPage: Page; 
+  soundEnabled: boolean;
+  onToggleSound: () => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
@@ -43,6 +49,14 @@ const Navbar = ({ onNavigate, currentPage }: { onNavigate: (page: Page) => void;
               {link.name}
             </button>
           ))}
+          {/* Sound Toggle */}
+          <button
+            onClick={onToggleSound}
+            className="text-[10px] tracking-[0.3em] font-bold uppercase transition-opacity opacity-40 hover:opacity-100"
+            title={soundEnabled ? 'Mute sound' : 'Enable sound'}
+          >
+            {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+          </button>
         </div>
       </motion.nav>
 
@@ -167,6 +181,7 @@ export default function App() {
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCluePanelOpen, setIsCluePanelOpen] = useState(false);
   const { progress, collectClue, completeChapter, unlockChapter, setCurrentChapter, resetProgress } = useProgress();
+  const { soundEnabled, toggleSound } = useAudio();
 
   const navigateTo = useCallback((page: Page) => {
     setCurrentPage(page);
@@ -200,7 +215,7 @@ export default function App() {
       {/* Noise Overlay */}
       <div className="fixed inset-0 bg-noise pointer-events-none z-0" />
 
-      <Navbar onNavigate={navigateTo} currentPage={currentPage} />
+      <Navbar onNavigate={navigateTo} currentPage={currentPage} soundEnabled={soundEnabled} onToggleSound={toggleSound} />
 
       {/* Floating Clue Button */}
       <AnimatePresence>

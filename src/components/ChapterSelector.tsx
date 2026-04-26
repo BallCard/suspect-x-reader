@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import type { Chapter } from '../types/story';
 import { getPerspectiveName } from '../data/chapters';
+import { useAudio } from '../hooks/useAudio';
 
 interface ChapterSelectorProps {
   chapters: Chapter[];
@@ -17,6 +18,8 @@ export function ChapterSelector({
   collectedClues,
   onSelectChapter,
 }: ChapterSelectorProps) {
+  const { click, lockedClick, hover } = useAudio();
+
   const isChapterUnlocked = (chapter: Chapter) =>
     unlockedChapters.includes(chapter.id);
 
@@ -25,6 +28,15 @@ export function ChapterSelector({
 
   const getMissingClues = (chapter: Chapter) =>
     chapter.requiredClues.filter(id => !collectedClues.includes(id));
+
+  const handleChapterClick = (chapter: Chapter) => {
+    if (isChapterUnlocked(chapter)) {
+      click();
+      onSelectChapter(chapter.id);
+    } else {
+      lockedClick();
+    }
+  };
 
   return (
     <section className="py-32 px-6 max-w-4xl mx-auto">
@@ -49,7 +61,8 @@ export function ChapterSelector({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              onClick={() => unlocked && onSelectChapter(chapter.id)}
+              onClick={() => handleChapterClick(chapter)}
+              onHoverStart={() => unlocked && hover()}
               className={`
                 group border-b border-white/5 pb-6 transition-all duration-300
                 ${unlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'}

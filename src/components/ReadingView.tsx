@@ -3,6 +3,7 @@ import type { Paragraph } from '../types/story';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Clue } from '../types/story';
 import { paragraphImages, type StoryImage } from '../data/images';
+import { useAudio } from '../hooks/useAudio';
 
 interface ReadingViewProps {
   paragraphs: Paragraph[];
@@ -35,6 +36,7 @@ export function ReadingView({
   const hasCompleted = useRef(false);
   const isRevealing = useRef(false);
   const lastScrollY = useRef(0);
+  const { reveal, clueFound, criticalClue, chapterComplete } = useAudio();
 
   // 触发线索
   const triggerClue = useCallback((clueId: string) => {
@@ -42,9 +44,15 @@ export function ReadingView({
     if (clue && !collectedClues.includes(clue.id)) {
       onClueTrigger(clue.id);
       setActiveClue(clue);
+      // Play clue sound based on importance
+      if (clue.importance === 'critical') {
+        criticalClue();
+      } else {
+        clueFound();
+      }
       setTimeout(() => setActiveClue(null), 4000);
     }
-  }, [clues, collectedClues, onClueTrigger]);
+  }, [clues, collectedClues, onClueTrigger, clueFound, criticalClue]);
 
   // 显示下一段
   const revealNext = useCallback(() => {
@@ -53,6 +61,7 @@ export function ReadingView({
 
     const newIndex = visibleCount;
     setVisibleCount(newIndex + 1);
+    reveal(); // Play reveal sound
 
     // 检查新显示的段落是否触发线索
     const paragraph = paragraphs[newIndex];
@@ -63,13 +72,14 @@ export function ReadingView({
     // 检查是否读完
     if (newIndex + 1 >= paragraphs.length && !hasCompleted.current) {
       hasCompleted.current = true;
+      chapterComplete(); // Play chapter complete sound
       setTimeout(() => onChapterComplete(), 1500);
     }
 
     setTimeout(() => {
       isRevealing.current = false;
     }, 300);
-  }, [visibleCount, paragraphs, triggerClue, onChapterComplete]);
+  }, [visibleCount, paragraphs, triggerClue, onChapterComplete, reveal, chapterComplete]);
 
   // 监听滚动：滚动到底部时加载下一段
   useEffect(() => {

@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import type { Clue } from '../types/story';
+import { useEffect } from 'react';
+import { useAudio } from '../hooks/useAudio';
 
 interface CluePanelProps {
   clues: Clue[];
@@ -11,6 +13,20 @@ interface CluePanelProps {
 }
 
 export function CluePanel({ clues, collectedClueIds, unlockedChapterIds, isOpen, onClose }: CluePanelProps) {
+  const { open, close } = useAudio();
+
+  // Play open sound when panel opens
+  useEffect(() => {
+    if (isOpen) {
+      open();
+    }
+  }, [isOpen, open]);
+
+  // Play close sound when closing (via onClose handler)
+  const handleClose = () => {
+    close();
+    onClose();
+  };
   // 只显示已解锁章节的线索
   const visibleClues = clues.filter(c => unlockedChapterIds.includes(c.chapterId));
   const collectedClues = visibleClues.filter(c => collectedClueIds.includes(c.id));
@@ -24,7 +40,7 @@ export function CluePanel({ clues, collectedClueIds, unlockedChapterIds, isOpen,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90]"
           />
 
@@ -46,7 +62,7 @@ export function CluePanel({ clues, collectedClueIds, unlockedChapterIds, isOpen,
                   <h2 className="serif text-3xl font-bold">线索库</h2>
                 </div>
                 <button
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="p-2 opacity-40 hover:opacity-100 transition-opacity"
                 >
                   <X size={20} />

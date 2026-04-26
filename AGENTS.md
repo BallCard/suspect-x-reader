@@ -33,16 +33,55 @@
 │   │   ├── chapters.ts      # 9章段落 + 36条线索
 │   │   └── images.ts        # 60张图片映射
 │   ├── hooks/               # 自定义钩子
-│   │   └── useProgress.ts
+│   │   ├── useProgress.ts   # 阅读进度持久化
+│   │   └── useAudio.tsx     # 音效系统
 │   ├── types/               # TypeScript 类型
 │   │   └── story.ts
 │   └── lib/                 # 工具库
-│       ├── audio.ts
+│       ├── audio.ts         # Web Audio API 音效合成
 │       └── utils.ts
 ├── public/images/          # 60张场景插画
 ├── package.json
 ├── vite.config.ts
 └── tsconfig.json
+```
+
+## 音效系统
+
+基于 Web Audio API 合成的沉浸式音效，无需外部音频文件。
+
+### 音效类型
+
+| 音效 | 触发场景 | 音效特点 |
+|------|----------|----------|
+| `hover` | 章节悬停 | 高频扫频 |
+| `click` | 章节点击 | 短促点击 |
+| `reveal` | 文本揭示 | 纸张翻动感 |
+| `clueFound` | 发现线索 | 神秘和弦 |
+| `criticalClue` | 发现关键线索 | 戏剧性低音+高频闪烁 |
+| `chapterComplete` | 章节完成 | 上行琶音 |
+| `chapterUnlocked` | 章节解锁 | 明亮的上升旋律 |
+| `lockedClick` | 点击锁定章节 | 低沉拒绝音 |
+| `open` | 面板打开 | 向上扫频 |
+| `close` | 面板关闭 | 向下扫频 |
+
+### 使用方式
+
+```tsx
+import { useAudio } from './hooks/useAudio';
+
+function MyComponent() {
+  const { click, clueFound } = useAudio();
+  
+  return <button onClick={() => { click(); onAction(); }} />;
+}
+```
+
+### 音效控制
+
+- 全局音效开关保存在 `localStorage` (`suspectx-sound-enabled`)
+- 导航栏提供音量图标按钮切换
+- 默认启用音效
 ```
 
 ## 运行与预览
