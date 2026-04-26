@@ -5,11 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_DIR"
 
-echo "Installing dependencies..."
+echo "Installing dependencies including serve..."
 pnpm install
-
-echo "Installing serve for static serving..."
-pnpm add -D serve
 
 echo "Building frontend with Vite..."
 pnpm vite build
