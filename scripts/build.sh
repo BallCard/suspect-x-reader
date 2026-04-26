@@ -8,5 +8,8 @@ cd "$PROJECT_DIR"
 echo "Installing dependencies..."
 pnpm install --prefer-frozen-lockfile --prefer-offline --loglevel debug --reporter=append-only
 
+echo "Installing serve for static serving..."
+pnpm add -D serve
+
 echo "Building frontend with Vite..."
 pnpm vite build
